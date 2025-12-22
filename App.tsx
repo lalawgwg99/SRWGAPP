@@ -134,10 +134,10 @@ export default function App() {
 
         {/* Search Section */}
         <section className="space-y-4">
-          <GlassCard className="p-2">
+          <GlassCard className="p-2 bg-white shadow-sm">
             <div className="relative flex items-center">
-              <div className="absolute left-4 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+              <div className="absolute left-4 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
               </div>
@@ -149,14 +149,14 @@ export default function App() {
                 onKeyDown={handleKeyDown}
                 placeholder={mode === AppMode.FIND_STORE ? "例如：高雄市鳳山區林森路291號" : "輸入店名關鍵字，如：五甲或WG"}
                 disabled={status === AppStatus.LOADING}
-                className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 text-lg py-4 pl-12 pr-4 font-medium"
+                className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500/80 text-lg py-4 pl-12 pr-4 font-bold"
               />
               {address && (
                 <button
                   onClick={() => setAddress('')}
-                  className="absolute right-4 p-1 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+                  className="absolute right-4 p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-gray-600">
                     <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                   </svg>
                 </button>
@@ -169,9 +169,9 @@ export default function App() {
               <button
                 onClick={handleLocateMe}
                 disabled={status === AppStatus.LOADING}
-                className="flex-1 py-4 rounded-[1.5rem] bg-white/10 hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/10 text-white font-medium flex items-center justify-center gap-2"
+                className="flex-1 py-4 rounded-[1.5rem] bg-white hover:bg-gray-50 active:scale-95 transition-all shadow-md shadow-gray-200 border border-transparent text-[#007AFF] font-bold flex items-center justify-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-blue-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                   <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
                 </svg>
                 定位目前位置
@@ -225,14 +225,14 @@ export default function App() {
 
         {/* Footer */}
         <footer className="w-full text-center pb-8 pt-4 space-y-2">
-          <p className="text-[10px] text-gray-400 font-medium tracking-wide">
+          <p className="text-[10px] text-gray-500 font-medium tracking-wide">
             Designed by 德
           </p>
           <a
             href="https://github.com/lalawgwg99/SRWGAPP/blob/main/README.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors"
+            className="text-[10px] text-gray-500 hover:text-gray-800 underline underline-offset-2 transition-colors"
           >
             使用說明
           </a>
