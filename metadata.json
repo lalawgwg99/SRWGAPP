@@ -1,0 +1,7 @@
+{
+  "name": "Carrefour Finder AI",
+  "description": "A futuristic iOS-styled application to find the nearest Carrefour store in Taiwan using AI and Google Maps Grounding.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
