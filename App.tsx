@@ -111,6 +111,9 @@ export default function App() {
           <h1 className="text-3xl font-bold tracking-tight text-[#1d1d1f] drop-shadow-sm">
             Carrefour Helper
           </h1>
+          <p className="text-sm text-gray-500 font-medium">
+            幫你找找附近分店跟越區費用
+          </p>
 
           <div className="bg-[#E5E5EA] p-1 rounded-xl flex relative mx-auto max-w-[280px]">
             <div
