@@ -9,9 +9,9 @@ import { FeeResult } from './components/FeeResult';
 
 export default function App() {
   const [mode, setMode] = useState<AppMode>(AppMode.FIND_STORE);
-
   const [address, setAddress] = useState('');
   const [status, setStatus] = useState<AppStatus>(AppStatus.IDLE);
+  const [excludeSupermarket, setExcludeSupermarket] = useState(false);
 
   // Store Search Results
   const [storeResult, setStoreResult] = useState<SearchResult | null>(null);
@@ -37,6 +37,7 @@ export default function App() {
     setErrorMsg('');
     setStoreResult(null);
     setFeeResult([]);
+    setExcludeSupermarket(false); // Reset filter when switching modes
   };
 
   const handleSearch = async (overrideAddress?: string, lat?: number, lng?: number) => {
@@ -52,7 +53,7 @@ export default function App() {
     try {
       if (mode === AppMode.FIND_STORE) {
         // For Find Store, we use Gemini
-        const data = await findNearestStore(query, lat, lng);
+        const data = await findNearestStore(query, lat, lng, excludeSupermarket);
         setStoreResult(data);
       } else {
         // For Fee Check, we search the loaded CSV data
@@ -97,49 +98,49 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full text-[#1d1d1f] font-sans flex flex-col items-center py-10 px-4 md:px-0 relative overflow-x-hidden">
+    <div className="min-h-screen w-full text-[#1d1d1f] font-sans flex flex-col items-center py-8 px-4 md:px-0 relative overflow-x-hidden">
 
-      {/* Background Ambience */}
-      {/* Background Ambience - iOS uses subtle gradients or solid background, removing dark blobs */}
-      <div className="fixed top-0 left-0 w-full h-full bg-[#F2F2F7] -z-10" />
+      {/* iOS 18.1 Background */}
+      <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8f9fa] via-[#f1f3f4] to-[#e8eaed] -z-10" />
 
-      {/* Main Container - iOS Style Max Width */}
-      <div className="w-full max-w-md z-10 flex flex-col gap-8 pb-20">
+      {/* Main Container - iOS 18.1 Style */}
+      <div className="w-full max-w-sm z-10 flex flex-col gap-6 pb-20">
 
-        {/* Header */}
-        <header className="text-center space-y-4 mt-4">
-          <h1 className="text-3xl font-bold tracking-tight text-[#1d1d1f] drop-shadow-sm">
+        {/* Header - iOS 18.1 Style */}
+        <header className="text-center space-y-3 mt-2">
+          <h1 className="text-2xl font-bold tracking-tight text-[#1d1d1f] drop-shadow-sm">
             Carrefour Helper
           </h1>
-          <p className="text-sm text-gray-500 font-medium">
+          <p className="text-sm text-[#8e8e93] font-medium">
             幫你找找附近分店跟越區費用
           </p>
 
-          <div className="bg-[#E5E5EA] p-1 rounded-xl flex relative mx-auto max-w-[280px]">
+          {/* iOS 18.1 Segmented Control */}
+          <div className="bg-[#f2f2f7] p-1 rounded-2xl flex relative mx-auto max-w-[260px] shadow-inner">
             <div
-              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300 ease-out ${mode === AppMode.FIND_STORE ? 'left-1' : 'left-[calc(50%+4px)]'}`}
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-xl shadow-sm transition-all duration-300 ease-out ${mode === AppMode.FIND_STORE ? 'left-1' : 'left-[calc(50%+4px)]'}`}
             />
 
             <button
               onClick={() => handleModeSwitch(AppMode.FIND_STORE)}
-              className={`flex-1 relative z-10 py-1.5 text-sm font-semibold transition-colors duration-200 ${mode === AppMode.FIND_STORE ? 'text-black' : 'text-gray-500 hover:text-gray-900'}`}
+              className={`flex-1 relative z-10 py-2 text-sm font-semibold transition-colors duration-200 rounded-xl ${mode === AppMode.FIND_STORE ? 'text-black' : 'text-[#8e8e93] hover:text-gray-900'}`}
             >
               找分店
             </button>
             <button
               onClick={() => handleModeSwitch(AppMode.CHECK_FEE)}
-              className={`flex-1 relative z-10 py-1.5 text-sm font-semibold transition-colors duration-200 ${mode === AppMode.CHECK_FEE ? 'text-black' : 'text-gray-500 hover:text-gray-900'}`}
+              className={`flex-1 relative z-10 py-2 text-sm font-semibold transition-colors duration-200 rounded-xl ${mode === AppMode.CHECK_FEE ? 'text-black' : 'text-[#8e8e93] hover:text-gray-900'}`}
             >
               查運費
             </button>
           </div>
         </header>
 
-        {/* Search Section */}
+        {/* Search Section - iOS 18.1 Style */}
         <section className="space-y-4">
-          <GlassCard className="p-2 bg-white shadow-sm">
+          <GlassCard className="p-1 bg-white/90 shadow-lg shadow-black/5 border border-black/5">
             <div className="relative flex items-center">
-              <div className="absolute left-4 text-gray-500">
+              <div className="absolute left-4 text-[#8e8e93]">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
@@ -152,14 +153,14 @@ export default function App() {
                 onKeyDown={handleKeyDown}
                 placeholder={mode === AppMode.FIND_STORE ? "例如：高雄市鳳山區林森路291號" : "輸入店名關鍵字，如：五甲或WG"}
                 disabled={status === AppStatus.LOADING}
-                className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500/80 text-lg py-4 pl-12 pr-4 font-bold"
+                className="w-full bg-transparent border-none outline-none text-[#1d1d1f] placeholder-[#8e8e93]/80 text-base py-4 pl-12 pr-4 font-medium rounded-2xl"
               />
               {address && (
                 <button
                   onClick={() => setAddress('')}
-                  className="absolute right-4 p-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+                  className="absolute right-4 p-1.5 bg-[#8e8e93]/10 rounded-full hover:bg-[#8e8e93]/20 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-gray-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-[#8e8e93]">
                     <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                   </svg>
                 </button>
@@ -168,25 +169,30 @@ export default function App() {
           </GlassCard>
 
           <div className="flex gap-3">
+            {/* iOS 18.1 Checkbox Button */}
             {mode === AppMode.FIND_STORE && (
-              <button
-                onClick={handleLocateMe}
-                disabled={status === AppStatus.LOADING}
-                className="flex-1 py-4 rounded-[1.5rem] bg-white hover:bg-gray-50 active:scale-95 transition-all shadow-md shadow-gray-200 border border-transparent text-[#007AFF] font-bold flex items-center justify-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
-                </svg>
-                定位目前位置
-              </button>
+              <div className="flex-1 py-4 rounded-2xl bg-white/90 hover:bg-white transition-all shadow-lg shadow-black/5 border border-black/5 flex items-center justify-center">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={excludeSupermarket}
+                    onChange={(e) => setExcludeSupermarket(e.target.checked)}
+                    className="w-5 h-5 text-[#007AFF] bg-white border-[#d1d1d6] rounded-md focus:ring-[#007AFF] focus:ring-2 focus:ring-offset-0"
+                  />
+                  <span className="text-base text-[#1d1d1f] font-medium">排除超市店</span>
+                </label>
+              </div>
             )}
 
+            {/* iOS 18.1 Primary Button */}
             <button
               onClick={() => handleSearch()}
               disabled={status === AppStatus.LOADING || (!address && !storeResult && !feeResult)}
               className={`
-                    flex-1 py-4 rounded-[1.5rem] font-bold text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95
-                    ${status === AppStatus.LOADING ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#007AFF] hover:bg-[#0062cc] shadow-blue-500/30'}
+                    flex-1 py-4 rounded-2xl font-semibold text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95
+                    ${status === AppStatus.LOADING 
+                      ? 'bg-[#8e8e93] cursor-not-allowed shadow-black/10' 
+                      : 'bg-[#007AFF] hover:bg-[#0056d6] shadow-[#007AFF]/30 active:shadow-[#007AFF]/40'}
                 `}
             >
               {status === AppStatus.LOADING ? (
@@ -212,8 +218,8 @@ export default function App() {
         {/* Results Area */}
         <div className="w-full">
           {status === AppStatus.ERROR && (
-            <GlassCard className="p-4 bg-red-100 border-red-200 text-center">
-              <p className="text-red-700 font-medium">{errorMsg}</p>
+            <GlassCard className="p-4 bg-[#ff3b30]/10 border-[#ff3b30]/20 text-center shadow-lg shadow-black/5">
+              <p className="text-[#ff3b30] font-medium">{errorMsg}</p>
             </GlassCard>
           )}
 
@@ -226,16 +232,16 @@ export default function App() {
           )}
         </div>
 
-        {/* Footer */}
+        {/* Footer - iOS 18.1 Style */}
         <footer className="w-full text-center pb-8 pt-4 space-y-2">
-          <p className="text-[10px] text-gray-500 font-medium tracking-wide">
+          <p className="text-[10px] text-[#8e8e93] font-medium tracking-wide">
             Designed by 德
           </p>
           <a
             href="https://github.com/lalawgwg99/SRWGAPP/blob/main/README.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-gray-500 hover:text-gray-800 underline underline-offset-2 transition-colors"
+            className="text-[10px] text-[#8e8e93] hover:text-[#007AFF] underline underline-offset-2 transition-colors"
           >
             使用說明
           </a>

@@ -9,7 +9,8 @@ const ai = new GoogleGenAI({ apiKey });
 export const findNearestStore = async (
   userLocation: string, 
   latitude?: number, 
-  longitude?: number
+  longitude?: number,
+  excludeSupermarket?: boolean
 ): Promise<SearchResult> => {
   try {
     const modelId = "gemini-2.5-flash"; // Required model for Maps Grounding
@@ -37,9 +38,14 @@ export const findNearestStore = async (
        };
     }
 
+    // Build store type filter based on excludeSupermarket option
+    const storeTypeFilter = excludeSupermarket 
+      ? "家樂福量販店（請排除家樂福超市、Market等小型店面）"
+      : "家樂福 (Carrefour)」分店（包含家樂福超市、Market 或量販店）";
+
     const prompt = `
       使用者位於：${userLocation} ${locationContext}。
-      請利用 Google Maps 工具，找出距離這個位置 **最近的 3 間**「家樂福 (Carrefour)」分店（包含家樂福超市、Market 或量販店）。
+      請利用 Google Maps 工具，找出距離這個位置 **最近的 3 間**「${storeTypeFilter}。
       
       請嚴格依照以下規則回答，這非常重要：
       1. 不要輸出任何開場白或結尾語。
